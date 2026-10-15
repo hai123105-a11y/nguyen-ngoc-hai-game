@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="theme-color" content="#000000" id="themeColorMeta">
+    <title>SHADOW DEFENDER | Web Game Arcade - Nguyễn Ngọc Hải</title>
+    <meta name="description" content="SHADOW DEFENDER - Trò chơi web arcade không gian phong cách tối giản đen trắng được phát triển bởi sinh viên Nguyễn Ngọc Hải. HTML5 Canvas, JavaScript & Python.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css?v=1.0">
+</head>
+<body>
+    <!-- Mobile Nav Overlay -->
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- Header / Navbar -->
+    <header class="navbar" id="navbar">
+        <div class="container nav-container">
+            <a href="#game" class="nav-brand">
+                <span class="brand-badge"><i class="fa-solid fa-gamepad"></i></span>
+                <span class="brand-text">NGUYỄN NGỌC HẢI<span class="brand-sub">.games</span></span>
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="#game" class="nav-link active">Chơi Game</a>
+                <a href="#how-to-play" class="nav-link">Cách Chơi</a>
+                <a href="#tech" class="nav-link">Kỹ Thuật</a>
+                <a href="#runner" class="nav-link">Chạy Local</a>
+                <a href="#about" class="nav-link">Tác Giả</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="sound-toggle-btn" id="soundToggle" aria-label="Bật / Tắt âm thanh" title="Âm thanh game">
+                    <i class="fa-solid fa-volume-high" id="soundIcon"></i>
+                </button>
+                <button class="theme-toggle-btn" id="themeToggle" aria-label="Đổi giao diện Đen / Trắng" title="Đổi màu giao diện">
+                    <i class="fa-solid fa-moon moon-icon"></i>
+                    <i class="fa-solid fa-sun sun-icon"></i>
+                </button>
+                <a href="https://github.com/hai123105-a11y/nguyen-ngoc-hai-game" target="_blank" rel="noopener noreferrer" class="btn-github-pill">
+                    <i class="fa-brands fa-github"></i>
+                    <span>GitHub</span>
+                </a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu di động">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Game Hero & Canvas Stage -->
+        <section class="section game-section" id="game">
+            <div class="container">
+                <div class="game-intro text-center">
+                    <div class="section-tag">Trò Chơi Sinh Tồn Arcade</div>
+                    <h1 class="game-main-title">SHADOW DEFENDER</h1>
+                    <p class="game-subtitle">
+                        Chiến hạm bóng đêm không gian vô cực • Lập trình bởi <strong>Nguyễn Ngọc Hải</strong>
+                    </p>
+                </div>
+
+                <!-- Game Container -->
+                <div class="game-wrapper" id="gameWrapper">
+                    <!-- Top Game HUD Bar -->
+                    <div class="game-hud">
+                        <div class="hud-item">
+                            <span class="hud-label">ĐIỂM SỐ</span>
+                            <span class="hud-val" id="hudScore">0</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">KỶ LỤC</span>
+                            <span class="hud-val" id="hudBest">0</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">ĐỢT QUÁI</span>
+                            <span class="hud-val" id="hudWave">1</span>
+                        </div>
+                        <div class="hud-item">
+                            <span class="hud-label">COMBO</span>
+                            <span class="hud-val" id="hudCombo">x1</span>
+                        </div>
+                        <div class="hud-item hud-lives">
+                            <span class="hud-label">MẠNG SỐNG</span>
+                            <div class="hud-hearts" id="hudHearts">
+                                <i class="fa-solid fa-heart"></i>
+                                <i class="fa-solid fa-heart"></i>
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                        </div>
+                        <div class="hud-controls-quick">
+                            <button class="hud-btn" id="btnPauseGame" title="Tạm dừng / Tiếp tục"><i class="fa-solid fa-pause"></i></button>
+                            <button class="hud-btn" id="btnFullscreen" title="Toàn màn hình"><i class="fa-solid fa-expand"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Area -->
+                    <div class="canvas-viewport" id="canvasViewport">
+                        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+                        <!-- Start Screen Overlay -->
+                        <div class="game-overlay" id="startOverlay">
+                            <div class="overlay-box">
+                                <div class="overlay-icon"><i class="fa-solid fa-rocket"></i></div>
+                                <h2 class="overlay-title">SHADOW DEFENDER</h2>
+                                <p class="overlay-desc">
+                                    Điều khiển chiến hạm tiêu diệt các thực thể bóng đêm, né tránh đạn và nhặt vật phẩm hỗ trợ!
+                                </p>
+                                <button class="btn btn-primary btn-play" id="btnStartGame">
+                                    <i class="fa-solid fa-play"></i> BẮT ĐẦU CHƠI
+                                </button>
+                                <div class="overlay-tips">
+                                    <span><i class="fa-solid fa-keyboard"></i> Máy tính: Phím mũi tên / WASD & Chuột</span>
+                                    <span><i class="fa-solid fa-mobile-screen"></i> Điện thoại: Vuốt ngón tay trực tiếp</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pause Screen Overlay -->
+                        <div class="game-overlay hidden" id="pauseOverlay">
+                            <div class="overlay-box">
+                                <h2 class="overlay-title">ĐANG TẠM DỪNG</h2>
+                                <button class="btn btn-primary" id="btnResumeGame">
+                                    <i class="fa-solid fa-play"></i> TIẾP TỤC
+                                </button>
+                                <button class="btn btn-outline" id="btnRestartFromPause">
+                                    <i class="fa-solid fa-rotate-right"></i> CHƠI LẠI
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Game Over Screen Overlay -->
+                        <div class="game-overlay hidden" id="gameOverOverlay">
+                            <div class="overlay-box">
+                                <div class="overlay-icon gameover"><i class="fa-solid fa-skull"></i></div>
+                                <h2 class="overlay-title">CHIẾN HẠM BỊ PHÁ HỦY</h2>
+                                <div class="gameover-stats">
+                                    <div class="go-stat">
+                                        <span>Điểm đạt được</span>
+                                        <strong id="finalScore">0</strong>
+                                    </div>
+                                    <div class="go-stat">
+                                        <span>Kỷ lục cao nhất</span>
+                                        <strong id="finalBest">0</strong>
+                                    </div>
+                                    <div class="go-stat">
+                                        <span>Đợt sóng sinh tồn</span>
+                                        <strong id="finalWave">1</strong>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-play" id="btnRestartGame">
+                                    <i class="fa-solid fa-rotate-right"></i> CHƠI LẠI NGAY
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile On-Screen Action Controls -->
+                    <div class="mobile-touch-bar" id="mobileTouchBar">
+                        <button class="touch-btn" id="touchFireBtn">
+                            <i class="fa-solid fa-crosshairs"></i>
+                            <span>BẮN</span>
+                        </button>
+                        <button class="touch-btn bomb" id="touchBombBtn">
+                            <i class="fa-solid fa-bomb"></i>
+                            <span id="touchBombCount">EMP (3)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How To Play Section -->
+        <section class="section how-section" id="how-to-play">
+            <div class="container">
+                <div class="section-header text-center">
+                    <div class="section-tag">Cẩm Nang Chiến Đấu</div>
+                    <h2 class="section-title">Cách Chơi & Vật Phẩm Hỗ Trợ</h2>
+                    <p class="section-desc">
+                        Nắm vững các phím điều khiển và thuộc tính của vật phẩm để đạt điểm số kỷ lục!
+                    </p>
+                </div>
+
+                <div class="controls-grid">
+                    <!-- Controls PC -->
+                    <div class="info-card">
+                        <div class="card-top">
+                            <span class="card-icon"><i class="fa-solid fa-computer"></i></span>
+                            <h3>Điều Khiển Trên Máy Tính</h3>
+                        </div>
+                        <ul class="control-list">
+                            <li><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> hoặc <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd> : Di chuyển chiến hạm</li>
+                            <li><kbd>Space</kbd> hoặc <kbd>Chuột Trái</kbd> : Bắn đạn laser liên thanh</li>
+                            <li><kbd>B</kbd> hoặc <kbd>Enter</kbd> : Kích nổ bom EMP quét sạch màn hình</li>
+                            <li><kbd>P</kbd> hoặc <kbd>Esc</kbd> : Tạm dừng trò chơi</li>
+                        </ul>
+                    </div>
+
+                    <!-- Controls Mobile -->
+                    <div class="info-card">
+                        <div class="card-top">
+                            <span class="card-icon"><i class="fa-solid fa-mobile-screen"></i></span>
+                            <h3>Điều Khiển Trên Điện Thoại</h3>
+                        </div>
+                        <ul class="control-list">
+                            <li><strong>Chạm & Kéo ngón tay</strong> : Tàu di chuyển mượt mà bám theo vị trí ngón tay</li>
+                            <li><strong>Tự động bắn</strong> : Chiến hạm tự khai hỏa khi ngón tay đang chạm màn hình</li>
+                            <li><strong>Nút EMP Bomb</strong> : Chạm nút bom trên thanh điều khiển để dọn quái vật</li>
+                            <li><strong>Nút Fullscreen</strong> : Bật chế độ tràn màn hình để chơi game trọn vẹn</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Powerups Showcase -->
+                <div class="powerups-container">
+                    <h3 class="powerups-title text-center">Các Vật Phẩm Rơi Ra Khi Tiêu Diệt Kẻ Địch</h3>
+                    <div class="powerups-grid">
+                        <div class="powerup-card">
+                            <div class="pu-badge">⚡</div>
+                            <h4>Triple Shot</h4>
+                            <p>Bắn ra 3 tia đạn chùm mở rộng góc bắn, tiêu diệt hàng loạt quái vật.</p>
+                        </div>
+                        <div class="powerup-card">
+                            <div class="pu-badge">🛡️</div>
+                            <h4>Energy Shield</h4>
+                            <p>Tạo một lớp khiên bảo vệ hấp thụ hoàn toàn 1 lần va chạm với kẻ địch.</p>
+                        </div>
+                        <div class="powerup-card">
+                            <div class="pu-badge">💣</div>
+                            <h4>EMP Bomb</h4>
+                            <p>Thêm 1 lượt kích nổ bom xung điện, xóa sổ tức thì mọi mục tiêu trên màn hình.</p>
+                        </div>
+                        <div class="powerup-card">
+                            <div class="pu-badge">⏳</div>
+                            <h4>Time Slow</h4>
+                            <p>Làm chậm tốc độ bay của toàn bộ quái vật và đạn địch trong vòng 5 giây.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section class="section tech-section" id="tech">
+            <div class="container">
+                <div class="section-header text-center">
+                    <div class="section-tag">Công Nghệ Xây Dựng</div>
+                    <h2 class="section-title">Ngôn Ngữ & Kỹ Thuật Đồ Họa</h2>
+                    <p class="section-desc">
+                        Trò chơi được xây dựng hoàn toàn từ các ngôn ngữ và thư viện web thuần túy, không sử dụng framework cồng kềnh:
+                    </p>
+                </div>
+
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-num">01</div>
+                        <h3>HTML5 Canvas 2D Engine</h3>
+                        <p>Kết xuất đồ họa 60 FPS mượt mà thông qua vòng lặp <code>requestAnimationFrame</code>. Tính toán tọa độ vector, gia tốc vật lý và va chạm hitbox chính xác.</p>
+                        <div class="tech-tags">
+                            <span>Canvas Context 2D</span>
+                            <span>Vector Math</span>
+                            <span>Collision Hitbox</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-num">02</div>
+                        <h3>JavaScript (ES6+) Object Engine</h3>
+                        <p>Xây dựng theo mô hình hướng đối tượng (OOP) quản lý các thực thể Player, Enemies, Bullets, Particles và Power-ups độc lập.</p>
+                        <div class="tech-tags">
+                            <span>OOP Architecture</span>
+                            <span>Particle System</span>
+                            <span>State Management</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-num">03</div>
+                        <h3>Web Audio API Synthesizer</h3>
+                        <p>Tự động tổng hợp sóng âm (Oscillator, GainNode, White Noise) tạo hiệu ứng âm thanh 8-bit sống động mà không cần tải bất kỳ file MP3/WAV bên ngoài nào.</p>
+                        <div class="tech-tags">
+                            <span>Zero Audio Files</span>
+                            <span>Custom Synthesizer</span>
+                            <span>Spatial Audio</span>
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-num">04</div>
+                        <h3>Python 3 Local Auto Server</h3>
+                        <p>File <code>run.py</code> đi kèm sử dụng thư viện chuẩn của Python để khởi chạy web server nội bộ và tự động kích hoạt trình duyệt chỉ với 1 click.</p>
+                        <div class="tech-tags">
+                            <span>Built-in http.server</span>
+                            <span>Auto Webbrowser</span>
+                            <span>Zero Dependencies</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Python Local Runner Section -->
+        <section class="section runner-section" id="runner">
+            <div class="container">
+                <div class="runner-card">
+                    <div class="runner-content">
+                        <div class="section-tag">Khởi chạy 1-Click</div>
+                        <h2 class="runner-title">Chạy Full Web Game Local Bằng Python</h2>
+                        <p class="runner-desc">
+                            Chỉ cần gõ 1 lệnh hoặc nhấp đúp file <code>run.py</code>, 
+                            máy chủ nội bộ sẽ tự kích hoạt tại <strong>http://localhost:8000</strong> và tự động mở trình duyệt web lên để bạn chơi game ngay lập tức!
+                        </p>
+                        
+                        <div class="runner-steps">
+                            <div class="runner-step">
+                                <span class="step-num">1</span>
+                                <div class="step-text">
+                                    <strong>Mở thư mục dự án:</strong>
+                                    <span>Truy cập vào thư mục <code>nguyen-ngoc-hai-game</code></span>
+                                </div>
+                            </div>
+                            <div class="runner-step">
+                                <span class="step-num">2</span>
+                                <div class="step-text">
+                                    <strong>Gõ lệnh chạy:</strong>
+                                    <div class="cli-box">
+                                        <code>python3 run.py</code>
+                                        <button class="cli-copy-btn" id="copyCliBtn" title="Sao chép"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="runner-step">
+                                <span class="step-num">3</span>
+                                <div class="step-text">
+                                    <strong>Trải nghiệm:</strong>
+                                    <span>Game sẽ tự động bật lên trên màn hình và sẵn sàng chiến đấu!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="runner-actions">
+                            <a href="https://github.com/hai123105-a11y/nguyen-ngoc-hai-game/blob/main/run.py" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                                <i class="fa-solid fa-file-code"></i> Xem file run.py
+                            </a>
+                            <a href="#game" class="btn btn-outline">
+                                <i class="fa-solid fa-gamepad"></i> Lên chơi game ngay
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="runner-terminal">
+                        <div class="terminal-window">
+                            <div class="terminal-top">
+                                <div class="code-dots">
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                    <span class="dot"></span>
+                                </div>
+                                <span class="terminal-label">Terminal - run.py</span>
+                            </div>
+                            <div class="terminal-screen">
+                                <div class="t-line">$ python3 run.py</div>
+                                <div class="t-line">====================================================</div>
+                                <div class="t-line">  🚀 NGUYỄN NGỌC HẢI - SHADOW DEFENDER GAME SERVER  </div>
+                                <div class="t-line">====================================================</div>
+                                <div class="t-line">[OK] Server đang hoạt động tốt</div>
+                                <div class="t-line">[URL] http://localhost:8000</div>
+                                <div class="t-line">[BROWSER] Tự động kích hoạt trình duyệt mặc định...</div>
+                                <div class="t-line">[READY] Game đã sẵn sàng khởi chiến!</div>
+                                <div class="t-line">&gt; Nhấn Ctrl + C bất cứ lúc nào để dừng server.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Developer Section -->
+        <section class="section about-section" id="about">
+            <div class="container">
+                <div class="about-card">
+                    <div class="about-grid">
+                        <div class="about-col">
+                            <div class="section-tag">Tác Giả & Lập Trình</div>
+                            <h2 class="about-title">NGUYỄN NGỌC HẢI</h2>
+                            <p class="about-p">
+                                Chào mừng bạn đến với dự án web game <strong>SHADOW DEFENDER</strong>. 
+                                Dự án được em phát triển với niềm đam mê sáng tạo game, tối ưu hóa thuật toán đồ họa 2D Canvas 
+                                và mang lại trải nghiệm mượt mà trên cả máy tính lẫn điện thoại.
+                            </p>
+                            <div class="about-meta-pills">
+                                <span><i class="fa-solid fa-code"></i> Frontend & Game Dev</span>
+                                <span><i class="fa-solid fa-gamepad"></i> HTML5 Canvas 2D</span>
+                                <span><i class="fa-brands fa-python"></i> Python Automation</span>
+                            </div>
+                        </div>
+                        <div class="about-col">
+                            <div class="info-list">
+                                <div class="info-row">
+                                    <span class="info-label">Nhà phát triển:</span>
+                                    <span class="info-val">NGUYỄN NGỌC HẢI</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Dự án:</span>
+                                    <span class="info-val">SHADOW DEFENDER (Web Game Arcade)</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Tài khoản GitHub:</span>
+                                    <span class="info-val"><a href="https://github.com/hai123105-a11y" target="_blank" rel="noopener noreferrer" class="text-underline">github.com/hai123105-a11y</a></span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Kho lưu trữ mã nguồn:</span>
+                                    <span class="info-val"><a href="https://github.com/hai123105-a11y/nguyen-ngoc-hai-game" target="_blank" rel="noopener noreferrer" class="text-underline">nguyen-ngoc-hai-game</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-left">
+                <span class="footer-logo">SHADOW DEFENDER</span>
+                <p class="footer-text">Trò chơi Web Game Arcade của sinh viên Nguyễn Ngọc Hải</p>
+            </div>
+            <div class="footer-links">
+                <a href="#game">Chơi Game</a>
+                <a href="#how-to-play">Cách Chơi</a>
+                <a href="https://github.com/hai123105-a11y/nguyen-ngoc-hai-game" target="_blank" rel="noopener noreferrer">Mã nguồn GitHub</a>
+            </div>
+            <div class="footer-right">
+                <p>&copy; 2026 Nguyễn Ngọc Hải. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button for Mobile -->
+    <button class="back-to-top-btn" id="backToTop" aria-label="Lên đầu trang" title="Lên đầu trang">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toastNotification">
+        <div class="toast-message" id="toastMessage">Thông báo!</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="game.js?v=1.0"></script>
+</body>
+</html>
